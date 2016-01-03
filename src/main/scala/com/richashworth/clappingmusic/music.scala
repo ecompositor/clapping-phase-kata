@@ -10,8 +10,8 @@ case object Note extends Beat
 class Pattern(val beats: Seq[Beat]) {
   def this(notation: String) = {
     this(notation.map(_.toUpper match {
-      case 'X' => Note
-      case _   => Rest
+      case 'X' ⇒ Note
+      case _   ⇒ Rest
     }))
   }
 
@@ -19,9 +19,8 @@ class Pattern(val beats: Seq[Beat]) {
 
   override def toString(): String = {
     beats.map(_ match {
-      case Note => "X"
-      case Rest => "_"
-    }) mkString " "
+      case Note ⇒ "X"
+      case Rest ⇒ "_" }) mkString " "
   }
 }
 
