@@ -1,0 +1,14 @@
+apply plugin: 'scala'
+apply plugin: 'idea'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.+'
+    compile 'org.scala-lang.modules:scala-async_2.11:0.9.+'
+
+    testCompile 'org.scalatest:scalatest_2.11:2.2.+'
+}
