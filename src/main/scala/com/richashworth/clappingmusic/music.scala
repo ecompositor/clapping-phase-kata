@@ -5,12 +5,12 @@ package com.richashworth.clappingmusic
   */
 sealed abstract class Beat
 case object Rest extends Beat
-case object Note extends Beat
+case object Clap extends Beat
 
-class Pattern(val beats: Seq[Beat]) {
+class Phrase(val beats: Seq[Beat]) {
   def this(notation: String) = {
     this(notation.map(_.toUpper match {
-      case 'X' ⇒ Note
+      case 'X' ⇒ Clap
       case _   ⇒ Rest
     }))
   }
@@ -19,7 +19,7 @@ class Pattern(val beats: Seq[Beat]) {
 
   override def toString(): String = {
     beats.map(_ match {
-      case Note ⇒ "X"
+      case Clap ⇒ "X"
       case Rest ⇒ "_" }) mkString " "
   }
 }

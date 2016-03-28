@@ -16,7 +16,7 @@ class MidiPlayer(midiChannel: Int) {
 
   val channel = synthesizer.getChannels()(midiChannel)
 
-  @tailrec final def play(sections: Stream[(Pattern, Pattern)], acc: Int = 0) {
+  @tailrec final def play(sections: Stream[(Phrase, Phrase)], acc: Int = 0) {
     sections match {
       case Stream.Empty  ⇒ stop
       case (a, b) #:: xs ⇒
@@ -35,10 +35,10 @@ class MidiPlayer(midiChannel: Int) {
   }
 
   def playPattern(pitch: Int, velocity: Int = 100,
-                  duration: Int = 160, pattern: Pattern) {
+                  duration: Int = 160, pattern: Phrase) {
     pattern.beats.foreach(_ match {
       case Rest ⇒ Thread.sleep(duration)
-      case Note ⇒ {
+      case Clap ⇒ {
         channel.noteOn(pitch, velocity)
         Thread.sleep(duration)
         channel.noteOff(pitch)
