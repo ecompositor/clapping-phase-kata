@@ -26,7 +26,7 @@ class ComposerSpec extends FlatSpec {
   }
 
   it should "preserve a pattern shifted by the pattern's length" in {
-    val originalPattern = new Phrase("X_XX__")
+    val originalPattern = new Phrase("XXX_XX_X_XX_")
     val fullCircle = Composer.getPhase(originalPattern, originalPattern.length)
     assert(fullCircle === originalPattern)
   }
