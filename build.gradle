@@ -1,5 +1,8 @@
 apply plugin: 'scala'
+apply plugin: 'application'
 apply plugin: 'idea'
+
+mainClassName = "com.richashworth.clappingmusic.ClappingMusic"
 
 repositories {
     jcenter()

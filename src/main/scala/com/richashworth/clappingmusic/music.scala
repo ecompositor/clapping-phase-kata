@@ -7,7 +7,7 @@ sealed abstract class Beat
 case object Rest extends Beat
 case object Clap extends Beat
 
-class Phrase(val beats: Seq[Beat]) {
+case class Phrase(val beats: Seq[Beat]) {
   def this(notation: String) = {
     this(notation.map(_.toUpper match {
       case 'X' ⇒ Clap
