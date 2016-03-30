@@ -6,43 +6,55 @@ import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
 
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 /**
   * Created by rich on 29/03/2016.
   */
 class Musician(channel: MidiChannel, pitch: Int) extends Actor {
 
-  private val beatLength = 160
+  private val beatLength = 170
 
   def receive = {
+    case Ping ⇒ sender ! Ping
     case Rest ⇒ Thread.sleep(beatLength)
     case Clap ⇒ {
       channel.noteOn(pitch, 100)
       Thread.sleep(beatLength)
       channel.noteOff(pitch)
     }
-    case Ping => sender ! Ping
   }
 }
 
+case object Ping
+
 object Main extends App {
-  val system = ActorSystem("HelloSystem")
   val synthesizer = MidiSystem.getSynthesizer()
   synthesizer.open()
-  val channel = synthesizer.getChannels()(10)
-  val midiActorOne = system.actorOf(Props(new Musician(channel, 42)), name = "A")
+  val channel = synthesizer.getChannels()(9)
+
+  val system = ActorSystem("MusicianSystem")
+  val midiActorOne = system.actorOf(Props(new Musician(channel, 43)), name = "A")
   val midiActorTwo = system.actorOf(Props(new Musician(channel, 35)), name = "B")
-  (1 to 20).foreach(i => {
-    midiActorOne ! Clap
-    midiActorTwo ! Clap
+  val maxPlayingTime = 1 hour
+  implicit val timeout = Timeout(maxPlayingTime)
+
+  val clappingMusic = Composer.composeTwoPartPhaseMusic(new Phrase("XXX XX X XX "))
+  val phaseRepetitions = 8
+
+  clappingMusic.foreach(duet ⇒ {
+    (1 until phaseRepetitions).foreach(_ ⇒ {
+      (0 until duet._1.length).foreach(i ⇒ {
+        midiActorOne ! duet._1.beats(i)
+        midiActorTwo ! duet._2.beats(i)
+      })
+    })
   })
-  implicit val timeout = Timeout(5 seconds)
-  val future = midiActorOne ? Ping
-  val result = Await.ready(future, Duration.Inf)
+
+  val futures = Future sequence Seq(midiActorOne ? Ping, midiActorTwo ? Ping)
+  Await.ready(futures, maxPlayingTime)
+
   system.terminate()
 }
-
-case object Ping

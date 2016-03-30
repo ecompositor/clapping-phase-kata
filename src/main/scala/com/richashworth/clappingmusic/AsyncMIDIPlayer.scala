@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by Rich Ashworth on 22/12/2015.
   */
-class MIDIPlayer(midiChannel: Int) {
+class AsyncMIDIPlayer(midiChannel: Int) {
 
   val synthesizer = MidiSystem.getSynthesizer()
   synthesizer.open()
