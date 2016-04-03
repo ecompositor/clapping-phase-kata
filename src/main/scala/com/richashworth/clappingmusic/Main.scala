@@ -17,17 +17,17 @@ object Main extends App {
   val synthesizer = MidiSystem.getSynthesizer()
   synthesizer.open()
 
-  val channel = synthesizer.getChannels()(1)
+  val channel = synthesizer.getChannels()(9) // General MIDI Percussion uses channel 9
 
   val system       = ActorSystem("MusicianSystem")
-  val midiActorOne = system.actorOf(Props(new Musician(channel, 60)), name = "A")
-  val midiActorTwo = system.actorOf(Props(new Musician(channel, 67)), name = "B")
+  val midiActorOne = system.actorOf(Props(new Musician(channel, 35)), name = "A")
+  val midiActorTwo = system.actorOf(Props(new Musician(channel, 60)), name = "B")
 
   val maxPlayingTime   = 1 hour
   implicit val timeout = Timeout(maxPlayingTime)
 
   val clappingMusic    = Composer.composeTwoPartPhaseMusic(new Phrase("XXX XX X XX "))
-  val phaseRepetitions = 4
+  val phaseRepetitions = 8
 
   clappingMusic.foreach(duet ⇒
     (1 until phaseRepetitions).foreach(_ ⇒

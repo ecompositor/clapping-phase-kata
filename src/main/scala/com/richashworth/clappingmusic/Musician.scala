@@ -9,7 +9,7 @@ import akka.actor._
   */
 class Musician(channel: MidiChannel, pitch: Int) extends Actor {
 
-  private val beatLength = 175
+  private val beatLength = 180
 
   def receive = {
     case Ping ⇒ sender ! Ping
